@@ -12,12 +12,14 @@
 							["p", { "class": "normal" }, "some paragraph",
 								[
 									["b", "bold text"],
-									["img", { "src": "images/sample.png" }]
+									["img", { "src": "images/sample.png" }],
+									["br"],
+									["span", "test"]
 								]
 							]
 						]
 					],
-					["div", "another div"]
+					["div", {"test":"bar"}, "another div"]
 
 				]);
 
@@ -48,9 +50,13 @@
 					})(),
 					
 					["br", { "class": "tall" }]
-				]);				
+				]);
+				
+				var html3 = JUP.toHTML(["div", {"class":"foo"}]);				
 
-				console.log(html2)	
+				console.log(html1);
+				console.log(html2);
+				console.log(html3);					
 	
 		</script>
 	</head>
