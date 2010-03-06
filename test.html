@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+		<title></title>
+		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+
+				var html1 = JUP.toHTML([
+					
+					["div",
+						["h1", "a title",
+							["p", { "class": "normal" }, "some paragraph",
+								[
+									["b", "bold text"],
+									["img", { "src": "images/sample.png" }]
+								]
+							]
+						]
+					],
+					["div", "another div"]
+
+				]);
+
+				var html2 = JUP.toHTML([
+					
+					["div", "a div"],
+					
+					["div", "another div"],
+					
+					["div", { "class": "normal" }, "div with attributes"],
+					
+					["div", 
+						["div", "a nested div"]
+					],
+					
+					["div", "some content",
+						["a", { "href": "#" }, "with a link"]
+					],
+					
+					(function() { 
+						
+						var tags = [];
+						for(var i=1; i < 11; i++) {
+							tags.push(["span", "test #" + i])
+						}
+						return tags;
+						
+					})(),
+					
+					["br", { "class": "tall" }]
+				]);				
+
+				console.log(html2)	
+	
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

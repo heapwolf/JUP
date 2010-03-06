@@ -1,0 +1,4 @@
+
+JUP (Javascript markUP) is markup generator.
+
+This markup genny takes an array and turns it into markup. It's very easy to do unobtrusive templates with.
