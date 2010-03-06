@@ -17,12 +17,11 @@ JUP.toHTML = function(structure) {
 	
 	var markup = [];
 	var attributes = [];
-	var selfClosing = false;
-	
+
 	var resolve = function(val) {
 		
 		var tag = null;
-		
+		var selfClosing = false;
 
 		for(var i=0; i < val.length; i++) {
 
@@ -32,10 +31,8 @@ JUP.toHTML = function(structure) {
 			}
 
 			if(isString(val[i]) && i == 0) { // this must be a tag, its in the first position								
-
-				selfClosing = false;
 				
-				switch(val[i]) {
+				switch(val[i].toLowerCase()) {
 					case "area":
 					case "base":
 					case "basefont":

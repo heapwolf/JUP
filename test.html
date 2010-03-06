@@ -52,7 +52,7 @@
 					["br", { "class": "tall" }]
 				]);
 				
-				var html3 = JUP.toHTML(["div", {"class":"foo"}]);				
+				var html3 = JUP.toHTML(["div", {"class":"foo"}, ["br"], "content"]);				
 
 				console.log(html1);
 				console.log(html2);
@@ -61,5 +61,44 @@
 		</script>
 	</head>
 	<body>
+		
+		<!-- expected output: test1 -->
+		<div>
+			<h1>a title
+				<p class='normal'>some paragraph
+					<b>bold text</b>
+					<img src='images/sample.png'/>
+					<br/>
+					<span>test</span>
+				</p>
+			</h1>
+		</div>
+		<div test='bar'>another div
+		</div>
+		
+		<!-- expected output: test2 -->		
+		<div>a div</div>
+		<div>another div</div>
+		<div class='normal'>div with attributes</div>
+		<div><div>a nested div</div></div>
+		<div>some content<a href='#'>with a link</a></div>
+		<span>test #1</span>
+		<span>test #2</span>
+		<span>test #3</span>
+		<span>test #4</span>
+		<span>test #5</span>
+		<span>test #6</span>
+		<span>test #7</span>
+		<span>test #8</span>
+		<span>test #9</span>
+		<span>test #10</span>
+		<br class='tall'/>
+		
+		<!-- expected output: test3 -->		
+		<div class='foo'>
+			<br/>content
+		</div>
+		
+		
 	</body>
 </html>
