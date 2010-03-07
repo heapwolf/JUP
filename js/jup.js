@@ -1,7 +1,7 @@
 
 var JUP = (typeof JUP == "undefined") ? {} : JUP;
 
-JUP.toHTML = function(structure) {
+JUP.toHTML = function(structure, qty) {
 
 	function isArray(obj) {
 	    return obj.constructor == Array;					
@@ -82,5 +82,10 @@ JUP.toHTML = function(structure) {
 	};
 
 	resolve(structure);
+	
+	for(var i=1; i < qty; i++) {
+		markup.push([markup.join("")]);
+	}
+	
 	return markup.join("");
 };

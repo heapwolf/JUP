@@ -34,29 +34,65 @@
 					["div", 
 						["div", "a nested div"]
 					],
-					
+
 					["div", "some content",
 						["a", { "href": "#" }, "with a link"]
 					],
-					
-					(function() { 
-						
+
+					(function() {
+
 						var tags = [];
 						for(var i=1; i < 11; i++) {
 							tags.push(["span", "test #" + i])
 						}
 						return tags;
-						
+
 					})(),
 					
 					["br", { "class": "tall" }]
 				]);
 				
-				var html3 = JUP.toHTML(["div", {"class":"foo"}, ["br"], "content"]);				
+				var html3 = JUP.toHTML(["div", {"class":"foo"}, ["br"], "content"], 2 /* how many instances of this markup to produce */);
+				
+				/* 
+				
+				// adding support for this right now...
+				// create multiple instances of each tag by supplying an integer in addition to the above feature...
+				
+				var html4 = JUP.toHTML([
+					["div", {"class":"foo"}, "lah", 2],
+					["span", {"class":"bar"}, "baz", 2]
+				], 2); 
+
+
+				// also adding support for the following templating festure
+
+				var data = {
+						[name: "Fern Micro",
+				         url: "http://github.com/fernmicro",
+				         cities: [
+				                 "New Orleans, LA",
+				                 "San Francisco, CA"
+				         ]],
+						[name: "Bucky Felini",
+				         url: "http://github.com/bucky",
+				         cities: [
+				                 "Philly, PA",
+				                 "NYC, NY"
+				         ]]				
+				};
+
+				var html5 = JUP.toHTML([
+					["div", {"class":"foo", "id": name}, name + " has the following "],
+					["span", {"class":"bar", "id": url}, "site: " + url]
+				], data);
+				
+				*/
 
 				console.log(html1);
 				console.log(html2);
-				console.log(html3);					
+				console.log(html3);	
+				//console.log(html4);									
 	
 		</script>
 	</head>
