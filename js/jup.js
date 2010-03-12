@@ -1,7 +1,14 @@
 
 var JUP = (typeof JUP == "undefined") ? {} : JUP;
 
-JUP.toHTML = function(structure, qty) {
+JUP.toHTML = function(params) {
+	
+	var structure = isObject(params) ? params.structure : params, 
+		qty = params.qty || 0,
+		data = params.data || null;
+		
+	var markup = [];
+	var attributes = [];		
 
 	function isArray(obj) {
 	    return obj.constructor == Array;					
@@ -14,14 +21,13 @@ JUP.toHTML = function(structure, qty) {
 	function isString(s) {
 		return s.constructor == String;
 	}
-	
-	var markup = [];
-	var attributes = [];
 
-	var resolve = function(val) {
+	var resolve = function(val, record) {
 		
 		var tag = null;
 		var selfClosing = false;
+		
+		
 
 		for(var i=0; i < val.length; i++) {
 
@@ -33,6 +39,13 @@ JUP.toHTML = function(structure, qty) {
 			if(isString(val[i]) && i == 0) { // this must be a tag, its in the first position								
 				
 				switch(val[i].toLowerCase()) {
+					case "data":
+						if(record !== undefined) {
+							markup.push(record[val[i+1]]);
+							return;
+						}
+					break;
+					
 					case "area":
 					case "base":
 					case "basefont":
@@ -73,7 +86,7 @@ JUP.toHTML = function(structure, qty) {
 				continue;
 			}
 			
-			resolve(val[i]); // this must be a child.
+			resolve(val[i], record); // this must be a child.
 
 			if(i == val.length-1 && tag !== null && !selfClosing) {
 				markup.push("</" + tag + ">"); // close it!
@@ -81,7 +94,15 @@ JUP.toHTML = function(structure, qty) {
 		}
 	};
 
-	resolve(structure);
+	if(data !== null) {
+		for(var i=0; i < data.length; i++) {
+			resolve(structure, data[i]);
+		}
+	}
+	else {
+	 	resolve(structure);
+	}
+	
 	
 	for(var i=1; i < qty; i++) {
 		markup.push([markup.join("")]);

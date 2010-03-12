@@ -5,8 +5,7 @@
 		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 
-				var html1 = JUP.toHTML([
-					
+				var html1 = JUP.toHTML([					
 					["div",
 						["h1", "a title",
 							["p", { "class": "normal" }, "some paragraph",
@@ -20,39 +19,44 @@
 						]
 					],
 					["div", {"test":"bar"}, "another div"]
-
 				]);
 
-				var html2 = JUP.toHTML([
-					
-					["div", "a div"],
-					
-					["div", "another div"],
-					
-					["div", { "class": "normal" }, "div with attributes"],
-					
-					["div", 
-						["div", "a nested div"]
-					],
+				var html2 = JUP.toHTML({
 
-					["div", "some content",
-						["a", { "href": "#" }, "with a link"]
-					],
-
-					(function() {
-
-						var tags = [];
-						for(var i=1; i < 11; i++) {
-							tags.push(["span", "test #" + i])
-						}
-						return tags;
-
-					})(),
+					structure: [
 					
-					["br", { "class": "tall" }]
-				]);
+						["div", "a div"],
 				
-				var html3 = JUP.toHTML(["div", {"class":"foo"}, ["br"], "content"], 2 /* how many instances of this markup to produce */);
+						["div", "another div"],
+				
+						["div", { "class": "normal" }, "div with attributes"],
+				
+						["div", 
+							["div", "a nested div"]
+						],
+
+						["div", "some content",
+							["a", { "href": "#" }, "with a link"]
+						],
+
+						(function() {
+
+							var tags = [];
+							for(var i=1; i < 11; i++) {
+								tags.push(["span", "test #" + i]);
+							}
+							return tags;
+
+						})(),
+				
+						["br", { "class": "tall" }]
+					]
+				});
+				
+				var html3 = JUP.toHTML({
+					structure: ["div", {"class":"foo"}, ["br"], "content"],
+					qty: 2 // how many instances of this markup to produce
+				});
 				
 				/* 
 				
@@ -63,78 +67,50 @@
 					["div", {"class":"foo"}, "lah", 2],
 					["span", {"class":"bar"}, "baz", 2]
 				], 2); 
-
+*/
 
 				// also adding support for the following templating festure
 
-				var data = {
-						[name: "Fern Micro",
-				         url: "http://github.com/fernmicro",
-				         cities: [
-				                 "New Orleans, LA",
-				                 "San Francisco, CA"
-				         ]],
-						[name: "Bucky Felini",
-				         url: "http://github.com/bucky",
-				         cities: [
-				                 "Philly, PA",
-				                 "NYC, NY"
-				         ]]				
-				};
+				var myData = [
+					{
+						name: "Fern Micro",
+						url: "http://github.com/fernmicro",
+						cities: [
+							"New Orleans, LA",
+							"San Francisco, CA"
+						]
+					},
+					{
+						name: "Bucky Felini",
+						url: "http://github.com/bucky",
+						cities: [
+							"Philly, PA",
+							"NYC, NY"
+						]
+					}
+				];
 
-				var html5 = JUP.toHTML([
-					["div", {"class":"foo", "id": name}, name + " has the following "],
-					["span", {"class":"bar", "id": url}, "site: " + url]
-				], data);
-				
-				*/
+				var html5 = JUP.toHTML({
+					
+					structure: [
+					
+							["div", {"class": "foo", "id": "first"}, ["data", "name"], " has the following "],
+							["span", {"class": "bar", "id": "second"}, "site: ", ["data", "url"]]
+					], 
+					
+					data: myData
+					
+				});
+
+						
 
 				console.log(html1);
 				console.log(html2);
 				console.log(html3);	
-				//console.log(html4);									
+				console.log(html5);									
 	
 		</script>
 	</head>
 	<body>
-		
-		<!-- expected output: test1 -->
-		<div>
-			<h1>a title
-				<p class='normal'>some paragraph
-					<b>bold text</b>
-					<img src='images/sample.png'/>
-					<br/>
-					<span>test</span>
-				</p>
-			</h1>
-		</div>
-		<div test='bar'>another div
-		</div>
-		
-		<!-- expected output: test2 -->		
-		<div>a div</div>
-		<div>another div</div>
-		<div class='normal'>div with attributes</div>
-		<div><div>a nested div</div></div>
-		<div>some content<a href='#'>with a link</a></div>
-		<span>test #1</span>
-		<span>test #2</span>
-		<span>test #3</span>
-		<span>test #4</span>
-		<span>test #5</span>
-		<span>test #6</span>
-		<span>test #7</span>
-		<span>test #8</span>
-		<span>test #9</span>
-		<span>test #10</span>
-		<br class='tall'/>
-		
-		<!-- expected output: test3 -->		
-		<div class='foo'>
-			<br/>content
-		</div>
-		
-		
 	</body>
 </html>
