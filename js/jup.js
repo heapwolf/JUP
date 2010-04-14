@@ -22,14 +22,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : {
 		return c;
 	},
 
-	isArray: function(obj) { // from underscore.js, thx =)
-		return Object.prototype.toString.call(obj) == "[object Array]";
-	},
-
-	isObject: function(obj) {
-		return (obj && typeof obj === "object");
-	},
-
 	isString: function(s) {
 	    return typeof s === "string";
 	},
@@ -49,7 +41,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : {
 
 		for(var i=0; i < val.length; i++) {
 
-			if(this.isString(val)) { // this must be a value
+			if(typeof val === "string") { // this must be a value
 
 				if(val.indexOf("{{") != -1 && record != null) {		
 					val = this.sup(val, record);
@@ -59,7 +51,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : {
 				break;
 			}
 
-			if(this.isString(val[i]) && i === 0) { // this must be a tag, its in the first position								
+			if(typeof val[i] === "string" && i === 0) { // this must be a tag, its in the first position								
 
 				switch(val[i].toLowerCase()) {
 					case "area":
@@ -78,13 +70,13 @@ var JUP = (typeof JUP != "undefined") ? JUP : {
 				// check to see if this array has any objects in it (check for attributes).
 				for(var j=i; j < val.length; j++) {
 
-					if(this.isObject(val[j])) { // this must be an attribute object
+					if(Object.prototype.toString.call(val[j]) != "[object Array]" && typeof val[j] == "object") { // this must be an attribute object
 
 						var a = val[j];
 
 						for (var v in a) {
 
-							if(this.isString(a[v]) && a[v].indexOf("{{") != -1 && record != null) { // if this is a token, pull it from the data param.
+							if(typeof a[v] === "string" && a[v].indexOf("{{") != -1 && record != null) { // if this is a token, pull it from the data param.
 								a[v] = this.sup(a[v], record);
 							}
 
@@ -117,7 +109,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : {
 	
 	toHTML: function(params) {
 
-		var structure = this.isArray(params) ? this.cloneStructure(params) : this.cloneStructure(params.structure);
+		var structure = Object.prototype.toString.call(params) == "[object Array]" ? this.cloneStructure(params) : this.cloneStructure(params.structure);
 		var qty = params.qty || 0;
 		var data = params.data || null;
 
