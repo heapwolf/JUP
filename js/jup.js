@@ -1,51 +1,67 @@
 
-var JUP = (typeof JUP == "undefined") ? {} : JUP;
+var JUP = (typeof JUP != "undefined") ? JUP : {
 
-JUP.toHTML = function(params) {
+	markup: [],
+	attributes: [],
+	lastout: null,	
 	
-	var structure = isObject(params) ? params.structure : params, 
-		qty = params.qty || 0,
-		data = params.data || null;
-		
-	var markup = [];
-	var attributes = [];		
+	data: function(str) {
+		return "{{" + str + "}}";
+	},
 
-	function isArray(obj) {
-	    return obj.constructor == Array;					
-	}
-	
-	function isObject(obj) {
-	    return obj.constructor == Object;					
-	}					
-	
-	function isString(s) {
-		return s.constructor == String;
-	}
+	cloneStructure: function(o) {
+		var c = (o instanceof Array) ? [] : {};
+		for (i in o) {
+			if (o[i] && typeof o[i] == "object") {
+				c[i] = this.cloneStructure(o[i]);
+			} 
+			else {
+				c[i] = o[i];
+			}
+		} 
+		return c;
+	},
 
-	var resolve = function(val, record) {
-		
+	isArray: function(obj) { // from underscore.js, thx =)
+		return Object.prototype.toString.call(obj) == "[object Array]";
+	},
+
+	isObject: function(obj) {
+		return (obj && typeof obj === "object");
+	},
+
+	isString: function(s) {
+	    return typeof s === "string";
+	},
+
+	sup: function(s, o) {
+		return s.replace(/{{([^{}]*)}}/g,
+	        function (a, b) {
+	            var r = o[b];
+	            return typeof r === "string" || typeof r === "number" ? r : a;
+	        });
+	},
+	
+	resolve: function(val, record) {
+
 		var tag = null;
 		var selfClosing = false;
-		
-		
 
 		for(var i=0; i < val.length; i++) {
 
-			if(isString(val)) { // this must be a value
-				markup.push(val);								
+			if(this.isString(val)) { // this must be a value
+
+				if(val.indexOf("{{") != -1 && record != null) {		
+					val = this.sup(val, record);
+				}
+
+				this.markup.push(val);								
 				break;
 			}
 
-			if(isString(val[i]) && i == 0) { // this must be a tag, its in the first position								
-				
+			if(this.isString(val[i]) && i === 0) { // this must be a tag, its in the first position								
+
 				switch(val[i].toLowerCase()) {
-					case "data":
-						if(record !== undefined) {
-							markup.push(record[val[i+1]]);
-							return;
-						}
-					break;
-					
 					case "area":
 					case "base":
 					case "basefont":
@@ -58,55 +74,70 @@ JUP.toHTML = function(params) {
 						selfClosing = true;
 					break;
 				}
-				
+
 				// check to see if this array has any objects in it (check for attributes).
 				for(var j=i; j < val.length; j++) {
 
-					if(isObject(val[j])) { // this must be an attribute object
-						
+					if(this.isObject(val[j])) { // this must be an attribute object
+
 						var a = val[j];
 
 						for (var v in a) {
-							attributes.push(" " + v + "='" + a[v] + "'");
+
+							if(this.isString(a[v]) && a[v].indexOf("{{") != -1 && record != null) { // if this is a token, pull it from the data param.
+								a[v] = this.sup(a[v], record);
+							}
+
+							this.attributes.push(" " + v + "='" + a[v] + "'");
 						}
 					}								
 				}
 
 				var close = selfClosing ? "/" : "";
 
-				if(attributes.length > 0) {
-					markup.push("<" + val[i] + attributes.join("") + close + ">");
-					attributes = [];
-					tag = val[i];
+				if(this.attributes.length > 0) {
+					this.markup.push("<" + val[i] + this.attributes.join("") + close + ">");
+					this.attributes = [];
+					tag = val[i].indexOf(" ") == -1 ? val[i] : val[i].substr(0, val[i].indexOf(" "));
 					continue;
 				}
-				
-				markup.push("<" + val[i] + close +">");
+
+				this.markup.push("<" + val[i] + close +">");
 				tag = val[i];					
 				continue;
 			}
-			
-			resolve(val[i], record); // this must be a child.
+
+			this.resolve(val[i], record); // this must be a child.
 
 			if(i == val.length-1 && tag !== null && !selfClosing) {
-				markup.push("</" + tag + ">"); // close it!
+				this.markup.push("</" + tag + ">"); // close it!
 			}
 		}
-	};
+	},
+	
+	toHTML: function(params) {
 
-	if(data !== null) {
-		for(var i=0; i < data.length; i++) {
-			resolve(structure, data[i]);
+		var structure = this.isArray(params) ? this.cloneStructure(params) : this.cloneStructure(params.structure);
+		var qty = params.qty || 0;
+		var data = params.data || null;
+
+		if(data !== null && data.length) {
+			for(var i=0; i < data.length; i++) {
+				this.resolve(structure, data[i]);
+			}
 		}
-	}
-	else {
-	 	resolve(structure);
-	}
-	
-	
-	for(var i=1; i < qty; i++) {
-		markup.push([markup.join("")]);
-	}
-	
-	return markup.join("");
+		else {
+			this.resolve(structure, data);
+		}
+
+		for(var i=0; i < qty; i++) {
+			this.markup.push([this.markup.join("")]);
+		}
+
+		this.lastout = this.markup.join("");
+		this.markup = []; 
+		this.attributes = [];
+
+		return this.lastout;
+	}	
 };

@@ -2,10 +2,24 @@
 <html>
 	<head>
 		<title></title>
+		<style type="text/css" media="screen">
+			html * {
+				font-family: Arial;
+			}
+				.heading {
+					font-size: 18px;
+					color: red;
+				}
+				.website {
+					font-size: 18px;
+					color: #666;
+				}
+		</style>
+		
 		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 
-				var html1 = JUP.toHTML([					
+/*				var html1 = JUP.toHTML([					
 					["div",
 						["h1", "a title",
 							["p", { "class": "normal" }, "some paragraph",
@@ -57,21 +71,8 @@
 					structure: ["div", {"class":"foo"}, ["br"], "content"],
 					qty: 2 // how many instances of this markup to produce
 				});
-				
-				/* 
-				
-				// adding support for this right now...
-				// create multiple instances of each tag by supplying an integer in addition to the above feature...
-				
-				var html4 = JUP.toHTML([
-					["div", {"class":"foo"}, "lah", 2],
-					["span", {"class":"bar"}, "baz", 2]
-				], 2); 
-*/
 
-				// also adding support for the following templating festure
-
-				var myData = [
+				var myData1 = [
 					{
 						name: "Fern Micro",
 						url: "http://github.com/fernmicro",
@@ -90,24 +91,28 @@
 					}
 				];
 
+				var myData2 = [
+					["hello", "bonjour", "hola"],
+					["goodbye", "au revoir", "adios"]
+				];
+
 				var html5 = JUP.toHTML({
 					
 					structure: [
 					
-							["div", {"class": "foo", "id": "first"}, ["data", "name"], " has the following "],
-							["span", {"class": "bar", "id": "second"}, "site: ", ["data", "url"]]
-					], 
+							["div", {"class": "record"}, [
+								["span", {"class": "heading"}, "The user, ", ["data", "name", 2], " can be found at "],
+								["span", {"class": "website"}, "'", ["data", "url"], "'"],
+								["span", ["data", "cities", 2]
+							]],
+							["br"]
+					]], 
 					
-					data: myData
+					data: myData1
 					
-				});
-
-						
-
-				console.log(html1);
-				console.log(html2);
-				console.log(html3);	
-				console.log(html5);									
+				});		
+				
+*/						
 	
 		</script>
 	</head>
