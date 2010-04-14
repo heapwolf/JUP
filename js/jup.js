@@ -22,10 +22,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : {
 		return c;
 	},
 
-	isString: function(s) {
-	    return typeof s === "string";
-	},
-
 	sup: function(s, o) {
 		return s.replace(/{{([^{}]*)}}/g,
 	        function (a, b) {
