@@ -5,7 +5,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 		
 		markup: [],
 		attributes: [],
-		lastout: null,	
+		lastout: [],	
 
 		cloneStructure: function(o) {
 			var c = (o instanceof Array) ? [] : {};
@@ -20,12 +20,17 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 			return c;
 		},
 
-		sup: function(s, o) {
-			return s.replace(/{{([^{}]*)}}/g,
-		        function (a, b) {
-		            var r = o[b];
-		            return typeof r === "string" || typeof r === "number" ? r : a;
-		        });
+		subst: function(s, o) { // inspired by doug crockford's "supplant" method.
+		    var count = -1;
+		    return s.replace(/{{([^{}]*)}}/g,
+		        function(str, r) {
+		            if(!isNaN(r)) { 
+		                return o[r]; 
+		            }
+		            count++;
+		            return o[(o instanceof Array) ? count : r];
+		        }
+		    );
 		},
 
 		resolve: function(val, record) {
@@ -36,10 +41,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 			for(var i=0; i < val.length; i++) {
 
 				if(typeof val === "string") { // this must be a value
-
-					if(val.indexOf("{{") != -1 && record != null) {		
-						val = this.sup(val, record);
-					}
 
 					this.markup.push(val);								
 					break;
@@ -64,17 +65,13 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 					// check to see if this array has any objects in it (check for attributes).
 					for(var j=i; j < val.length; j++) {
 
-						if(Object.prototype.toString.call(val[j]) != "[object Array]" && typeof val[j] == "object") { // this must be an attribute object
+						if(!(val[j] instanceof Array) && typeof val[j] == "object") { // this must be an attribute object
 
 							var a = val[j];
 
 							for (var v in a) {
 
-								if(typeof a[v] === "string" && a[v].indexOf("{{") != -1 && record != null) { // if this is a token, pull it from the data param.
-									a[v] = this.sup(a[v], record);
-								}
-
-								this.attributes.push(" " + v + "='" + a[v] + "'");
+								this.attributes.push([" ", v, "='", a[v], "'"].join(""));
 							}
 						}								
 					}
@@ -82,13 +79,13 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 					var close = selfClosing ? "/" : "";
 
 					if(this.attributes.length > 0) {
-						this.markup.push("<" + val[i] + this.attributes.join("") + close + ">");
+						this.markup.push(["<", val[i], this.attributes.join(""), close, ">"].join(""));
 						this.attributes = [];
 						tag = val[i].indexOf(" ") == -1 ? val[i] : val[i].substr(0, val[i].indexOf(" "));
 						continue;
 					}
 
-					this.markup.push("<" + val[i] + close +">");
+					this.markup.push(["<", val[i], close, ">"].join(""));
 					tag = val[i];					
 					continue;
 				}
@@ -96,36 +93,38 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 				this.resolve(val[i], record); // this must be a child.
 
 				if(i == val.length-1 && tag !== null && !selfClosing) {
-					this.markup.push("</" + tag + ">"); // close it!
+					this.markup.push(["</", tag, ">"].join("")); // close it!
 				}
 			}
 		},
 	}
 
 	return {
-		
+
 		data: function(str) {
-			return "{{" + str + "}}";
+			return ["{{", str, "}}"].join("");
 		},
 
 		toHTML: function(params) {
 
-			var structure = Object.prototype.toString.call(params) == "[object Array]" ? 
+			var structure = (params instanceof Array) ? 
 				Util.cloneStructure(params) : Util.cloneStructure(params.structure);
 			var qty = params.qty || 0;
 			var data = params.data || null;
 
 			if(data !== null && data.length) {
+				
 				for(var i=0; i < data.length; i++) {
-					Util.resolve(structure, data[i]);
+					Util.resolve(structure);
+					Util.markup = [Util.subst(Util.markup.join(""), data[i])];
 				}
-			}
-			else {
-				Util.resolve(structure, data);
+			} else {
+				Util.resolve(structure);
+				Util.markup = [Util.subst(Util.markup.join(""), data)];
 			}
 
 			for(var i=0; i < qty; i++) {
-				Util.markup.push([Util.markup.join("")]);
+				Util.markup.push([data ? Util.subst(Util.markup.join(""), data) : Util.markup.join("")]);
 			}
 
 			Util.lastout = Util.markup.join("");
@@ -135,5 +134,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 			return Util.lastout;
 		}	
 	};
+
 })();
 

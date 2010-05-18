@@ -3,117 +3,107 @@
 	<head>
 		<title></title>
 		<style type="text/css" media="screen">
-			html * {
-				font-family: Arial;
-			}
-				.heading {
-					font-size: 18px;
-					color: red;
-				}
-				.website {
-					font-size: 18px;
-					color: #666;
-				}
+			/* not at all important, just for testing */
+			html * { font-family: Arial; color: #666; }
+			h1 { color: #b55337; }
+			h3 { font-weight: bold; color: #000; }
+			hr { height: 14px; border: 1px #ddd solid; }
+
+			.heading { font-size: 18px; color: #b55337; font-weight: bold; }
+			.website { font-size: 18px; color: #666; }
 		</style>
 		
 		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 
-				var html1 = JUP.toHTML([					
-					["div",
-						["h1", "a title",
-							["p", { "class": "normal" }, "some paragraph",
-								[
-									["b", "bold text"],
-									["img", { "src": "images/sample.png" }],
-									["br"],
-									["span", "test"]
-								]
+			var html1 = JUP.toHTML([					
+				["div",
+					["h1", "a title",
+						["p", { "class": "normal" }, "some paragraph",
+							[
+								["b", "bold text"],
+								["img", { "src": "images/sample.png" }],
+								["br"],
+								["span", "test"]
 							]
 						]
-					],
-					["div", {"test":"bar"}, "another div"]
-				]);
-
-				var html2 = JUP.toHTML({
-
-					structure: [
-					
-						["div", "a div"],
-				
-						["div", "another div"],
-				
-						["div", { "class": "normal" }, "div with attributes"],
-				
-						["div", 
-							["div", "a nested div"]
-						],
-
-						["div", "some content",
-							["a", { "href": "#" }, "with a link"]
-						],
-
-						(function() {
-
-							var tags = [];
-							for(var i=1; i < 11; i++) {
-								tags.push(["span", "test #" + i]);
-							}
-							return tags;
-
-						})(),
-				
-						["br", { "class": "tall" }]
 					]
-				});
+				],
+				["div", {"test":"bar"}, "another div"]
+			]);
+
+			var html2 = JUP.toHTML({
+
+				structure: [
 				
-				var html3 = JUP.toHTML({
-					structure: ["div", {"class":"foo"}, ["br"], "content"],
-					qty: 2 // how many instances of this markup to produce
-				});
+					["div", "a div"],
+					["div", "another div"],
+					["div", { "class": "normal" }, "div with attributes"],
+					["div", 
+						["div", "a nested div"]
+					],
+					["div", "some content",
+						["a", { "href": "#" }, "with a link"]
+					],
 
-				var myData1 = [
-					{
-						name: "Fern Micro",
-						url: "http://github.com/fernmicro",
-						cities: [
-							"New Orleans, LA",
-							"San Francisco, CA"
-						]
-					},
-					{
-						name: "Bucky Felini",
-						url: "http://github.com/bucky",
-						cities: [
-							"Philly, PA",
-							"NYC, NY"
-						]
-					}
-				];
+					(function() {
 
-				var myData2 = [
-					["hello", "bonjour", "hola"],
-					["goodbye", "au revoir", "adios"]
-				];
+						var tags = [];
+						for(var i=1; i < 11; i++) {
+							tags.push(["span", "test #" + i]);
+						}
+						return tags;
 
-				var html5 = JUP.toHTML({
-					
-					structure: [
-					
-							["div", {"class": "record"}, [
-								["span", {"class": "heading"}, "foo"],
-								["span", {"class": "website"}, "bar"],
-								["span"]
-							]],
-							["br"]
-					], 
-					
-					data: myData1
-					
-				});		
+					})(),
+			
+					["br", { "class": "tall" }]
+				]
+			});
+			
+			var html3 = JUP.toHTML({
+				structure: ["div", {"class":"foo"}, ["br"], "content"],
+				qty: 2 // how many instances of this markup to produce
+			});
+
+			var data1 = [
+				{
+					name: "Fern Micro",
+					url: "github.com/fernmicro",
+					cities: [
+						"New Orleans, LA",
+						"San Francisco, CA"
+					]
+				},
+				{
+					name: "Bucky Felini",
+					url: "github.com/bucky",
+					cities: [
+						"Philly, PA",
+						"NYC, NY"
+					]
+				}
+			];
+
+			var html4 = JUP.toHTML({
 				
-				console.log(html5)	
-	
+				structure: [
+				
+					["div", {"class": "record"}, [
+						["span", {"class": "heading"}, JUP.data("name")],
+						["br"],
+						["span", {"class": "website"}, "http://{{url}}"],
+						["br"],
+						["span"]
+					]],
+					["br"]
+				], 
+				
+				data: data1
+				
+			});		
+			
+			document.write(["", html1, html2, html3, html4].join("<hr/>"));
+
 		</script>
 	</head>
 	<body>
