@@ -1,139 +1,139 @@
 
-var JUP = (typeof JUP != "undefined") ? JUP : (function() { 
+var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
-	var Util = {
-		
-		markup: [],
-		attributes: [],
-		lastout: [],	
+    var Util = {
 
-		cloneStructure: function(o) {
-			var c = (o instanceof Array) ? [] : {};
-			for (i in o) {
-				if (o[i] && typeof o[i] == "object") {
-					c[i] = this.cloneStructure(o[i]);
-				} 
-				else {
-					c[i] = o[i];
-				}
-			} 
-			return c;
-		},
+        markup: [],
+        attributes: [],
+        lastout: [],
 
-		subst: function(s, o) { // inspired by doug crockford's "supplant" method.
-		    var count = -1;
-		    return s.replace(/{{([^{}]*)}}/g,
-		        function(str, r) {
-		            if(!isNaN(r)) { 
-		                return o[r]; 
-		            }
-		            count++;
-		            return o[(o instanceof Array) ? count : r];
-		        }
-		    );
-		},
+        cloneStructure: function(o) {
+            var c = (o instanceof Array) ? [] : {};
+            for (i in o) {
+                if (o[i] && typeof o[i] == "object") {
+                    c[i] = this.cloneStructure(o[i]);
+                }
+                else {
+                    c[i] = o[i];
+                }
+            }
+            return c;
+        },
 
-		resolve: function(val, record) {
+        subst: function(s, o) { // inspired by doug crockford's "supplant" method.
+            var count = -1;
+            return s.replace(/{{([^{}]*)}}/g,
+                function(str, r) {
+                    if(!isNaN(r)) {
+                        return o[r];
+                    }
+                    count++;
+                    return o[(o instanceof Array) ? count : r];
+                }
+            );
+        },
 
-			var tag = null;
-			var selfClosing = false;
+        resolve: function(val, record) {
 
-			for(var i=0; i < val.length; i++) {
+            var tag = null;
+            var selfClosing = false;
 
-				if(typeof val === "string") { // this must be a value
+            for(var i=0; i < val.length; i++) {
 
-					this.markup.push(val);								
-					break;
-				}
+                if(typeof val === "string") { // this must be a value
 
-				if(typeof val[i] === "string" && i === 0) { // this must be a tag, its in the first position								
+                    this.markup.push(val);
+                    break;
+                }
 
-					switch(val[i].toLowerCase()) {
-						case "area":
-						case "base":
-						case "basefont":
-						case "br":
-						case "hr":
-						case "input":
-						case "img":
-						case "link":
-						case "meta":
-							selfClosing = true;
-						break;
-					}
+                if(typeof val[i] === "string" && i === 0) { // this must be a tag, its in the first position
 
-					// check to see if this array has any objects in it (check for attributes).
-					for(var j=i; j < val.length; j++) {
+                    switch(val[i].toLowerCase()) {
+                        case "area":
+                        case "base":
+                        case "basefont":
+                        case "br":
+                        case "hr":
+                        case "input":
+                        case "img":
+                        case "link":
+                        case "meta":
+                            selfClosing = true;
+                        break;
+                    }
 
-						if(!(val[j] instanceof Array) && typeof val[j] == "object") { // this must be an attribute object
+                    // check to see if this array has any objects in it (check for attributes).
+                    for(var j=i; j < val.length; j++) {
 
-							var a = val[j];
+                        if(!(val[j] instanceof Array) && typeof val[j] == "object") { // this must be an attribute object
 
-							for (var v in a) {
+                            var a = val[j];
 
-								this.attributes.push([" ", v, "='", a[v], "'"].join(""));
-							}
-						}								
-					}
+                            for (var v in a) {
 
-					var close = selfClosing ? "/" : "";
+                                this.attributes.push([" ", v, "='", a[v], "'"].join(""));
+                            }
+                        }
+                    }
 
-					if(this.attributes.length > 0) {
-						this.markup.push(["<", val[i], this.attributes.join(""), close, ">"].join(""));
-						this.attributes = [];
-						tag = val[i].indexOf(" ") == -1 ? val[i] : val[i].substr(0, val[i].indexOf(" "));
-						continue;
-					}
+                    var close = selfClosing ? "/" : "";
 
-					this.markup.push(["<", val[i], close, ">"].join(""));
-					tag = val[i];					
-					continue;
-				}
+                    if(this.attributes.length > 0) {
+                        this.markup.push(["<", val[i], this.attributes.join(""), close, ">"].join(""));
+                        this.attributes = [];
+                        tag = val[i].indexOf(" ") == -1 ? val[i] : val[i].substr(0, val[i].indexOf(" "));
+                        continue;
+                    }
 
-				this.resolve(val[i], record); // this must be a child.
+                    this.markup.push(["<", val[i], close, ">"].join(""));
+                    tag = val[i];
+                    continue;
+                }
 
-				if(i == val.length-1 && tag !== null && !selfClosing) {
-					this.markup.push(["</", tag, ">"].join("")); // close it!
-				}
-			}
-		},
-	}
+                this.resolve(val[i], record); // this must be a child.
 
-	return {
+                if(i == val.length-1 && tag !== null && !selfClosing) {
+                    this.markup.push(["</", tag, ">"].join("")); // close it!
+                }
+            }
+        },
+    }
 
-		data: function(str) {
-			return ["{{", str, "}}"].join("");
-		},
+    return {
 
-		toHTML: function(params) {
+        data: function(str) {
+            return ["{{", str, "}}"].join("");
+        },
 
-			var structure = (params instanceof Array) ? 
-				Util.cloneStructure(params) : Util.cloneStructure(params.structure);
-			var qty = params.qty || 0;
-			var data = params.data || null;
+        toHTML: function(params) {
 
-			if(data !== null && data.length) {
-				
-				for(var i=0; i < data.length; i++) {
-					Util.resolve(structure);
-					Util.markup = [Util.subst(Util.markup.join(""), data[i])];
-				}
-			} else {
-				Util.resolve(structure);
-				Util.markup = [Util.subst(Util.markup.join(""), data)];
-			}
+            var structure = (params instanceof Array) ?
+                Util.cloneStructure(params) : Util.cloneStructure(params.structure);
+            var qty = params.qty || 0;
+            var data = params.data || null;
 
-			for(var i=0; i < qty; i++) {
-				Util.markup.push([data ? Util.subst(Util.markup.join(""), data) : Util.markup.join("")]);
-			}
+            if(data !== null && data.length) {
 
-			Util.lastout = Util.markup.join("");
-			Util.markup = []; 
-			Util.attributes = [];
+                for(var i=0; i < data.length; i++) {
+                    Util.resolve(structure);
+                    Util.markup = [Util.subst(Util.markup.join(""), data[i])];
+                }
+            } else {
+                Util.resolve(structure);
+                Util.markup = [Util.subst(Util.markup.join(""), data)];
+            }
 
-			return Util.lastout;
-		}	
-	};
+            for(var i=0; i < qty; i++) {
+                Util.markup.push([data ? Util.subst(Util.markup.join(""), data) : Util.markup.join("")]);
+            }
+
+            Util.lastout = Util.markup.join("");
+            Util.markup = [];
+            Util.attributes = [];
+
+            return Util.lastout;
+        }
+    };
 
 })();
 
