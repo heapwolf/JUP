@@ -7,7 +7,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
         lastout: [],
 
         adopt: function(o) {
-            var c = (o instanceof Array) ? [] : {};
+            var c = (o instanceof Array) ? [] : {}; // TODO: fix lame ass array type check
             for (i in o) {
                 if (o[i] && typeof o[i] == "object") {
                     c[i] = this.adopt(o[i]);
