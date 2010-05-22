@@ -1,2 +1,18 @@
 
-JUP (Javascript markUP) is markup generator.
+JUP (Javascript markUP) is an html generator. It has a clear and concise syntax for declaring markup using JavaScript arrays.
+Since JUP is native javascript, you can introduce native iterators and functions into the structure definitions.
+
+["div"] // Renders "<div></div>"
+
+["div", { "class": "foo" }] // Renders "<div class='foo'></div>"
+
+["div", { "class": "foo" }, "content"] // Renders "<div class='foo'>content</div>"
+
+["div", { "class": "foo" }, ["div"], "content"] // Renders "<div class='foo'><div></div>content</div>"
+
+["div", { "class": "foo" }, "content", ["div"]] // Renders "<div class='foo'>content<div></div></div>"
+
+JUP also has the ability to combine markup generation with data (using a supplant/crockford-like syntax) for instance...
+
+["div", { "class": "{{replaceme}}" }]
+
