@@ -1,4 +1,3 @@
-
 var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
     var Util = {
@@ -7,11 +6,11 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
         attributes: [],
         lastout: [],
 
-        cloneStructure: function(o) {
+        adopt: function(o) {
             var c = (o instanceof Array) ? [] : {};
             for (i in o) {
                 if (o[i] && typeof o[i] == "object") {
-                    c[i] = this.cloneStructure(o[i]);
+                    c[i] = this.adopt(o[i]);
                 }
                 else {
                     c[i] = o[i];
@@ -21,19 +20,21 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
         },
 
         subst: function(s, o) { // inspired by doug crockford's "supplant" method.
+			
             var count = -1;
             return s.replace(/{{([^{}]*)}}/g,
                 function(str, r) {
                     if(!isNaN(r)) {
                         return o[r];
                     }
+
                     count++;
                     return o[(o instanceof Array) ? count : r];
                 }
             );
         },
 
-        resolve: function(val, record) {
+        resolve: function(val) {
 
             var tag = null;
             var selfClosing = false;
@@ -65,7 +66,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     // check to see if this array has any objects in it (check for attributes).
                     for(var j=i; j < val.length; j++) {
 
-                        if(!(val[j] instanceof Array) && typeof val[j] == "object") { // this must be an attribute object
+                        if(!(val[j] instanceof Array) && typeof val[j] == "object") {
 
                             var a = val[j];
 
@@ -90,7 +91,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     continue;
                 }
 
-                this.resolve(val[i], record); // this must be a child.
+                this.resolve(val[i]); // this must be a child.
 
                 if(i == val.length-1 && tag !== null && !selfClosing) {
                     this.markup.push(["</", tag, ">"].join("")); // close it!
@@ -105,35 +106,33 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
             return ["{{", str, "}}"].join("");
         },
 
-        toHTML: function(params) {
+		toHTML: function(params) {
+			this.html(params, jup);
+		},
 
-            var structure = (params instanceof Array) ?
-                Util.cloneStructure(params) : Util.cloneStructure(params.structure);
-            var qty = params.qty || 0;
-            var data = params.data || null;
+        html: function(data, jup) {
+
+			var args = Array.prototype.slice.call(arguments);
+            var structure = Util.adopt(args.length == 2 ? args[1] : ((args[0] instanceof Array) ? args[0] : args[0].structure));
+			data = data || args[0].data;
 
             if(data !== null && data.length) {
+				for(var i=0; i < data.length; i++) {
+				    Util.resolve(structure);
+				    Util.markup.push(Util.subst(Util.markup.join(""), data[i]));
+				}
+			} else if(data !== null) {
+			    Util.resolve(structure);
+			    Util.markup = [Util.subst(Util.markup.join(""), data)];
+			} else {
+				Util.resolve(structure);
+			}
 
-                for(var i=0; i < data.length; i++) {
-                    Util.resolve(structure);
-                    Util.markup = [Util.subst(Util.markup.join(""), data[i])];
-                }
-            } else {
-                Util.resolve(structure);
-                Util.markup = [Util.subst(Util.markup.join(""), data)];
-            }
-
-            for(var i=0; i < qty; i++) {
-                Util.markup.push([data ? Util.subst(Util.markup.join(""), data) : Util.markup.join("")]);
-            }
-
-            Util.lastout = Util.markup.join("");
+            Util.lastout = (data !== null) ? Util.subst(Util.markup.join(""), data) : Util.markup.join("");
             Util.markup = [];
             Util.attributes = [];
 
             return Util.lastout;
         }
     };
-
 })();
-

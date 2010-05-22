@@ -16,7 +16,7 @@
 		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 
-			var html1 = JUP.toHTML([					
+			var html1 = {} /* JUP.html({}, [					
 				["div",
 					["h1", "a title",
 						["p", { "class": "normal" }, "some paragraph",
@@ -29,12 +29,10 @@
 						]
 					]
 				],
-				["div", {"test":"bar"}, "another div"]
+				["div", { "test": "bar" }, "another div"]
 			]);
 
-			var html2 = JUP.toHTML({
-
-				structure: [
+			var html2 = {}; /* JUP.html([
 				
 					["div", "a div"],
 					["div", "another div"],
@@ -58,12 +56,12 @@
 			
 					["br", { "class": "tall" }]
 				]
-			});
+			); */
 			
-			var html3 = JUP.toHTML({
-				structure: ["div", {"class":"foo"}, ["br"], "content"],
+			var html3 = {} /* JUP.html({
+				structure: ["div", { "class": "foo" }, ["br"], "content"],
 				qty: 2 // how many instances of this markup to produce
-			});
+			}); */
 
 			var data1 = [
 				{
@@ -84,25 +82,26 @@
 				}
 			];
 
-			var html4 = JUP.toHTML({
+			var html4 ={};
+
+			var html5 = JUP.html({data: data1},
+
+				// The following shows two methods for stubbing out data
 				
-				structure: [
-				
-					["div", {"class": "record"}, [
-						["span", {"class": "heading"}, JUP.data("name")],
+				[				
+					["div", { "class": "record" }, [
+						["span", { "class": "heading" }, JUP.data("name")],
 						["br"],
-						["span", {"class": "website"}, "http://{{url}}"],
+						["span", { "class": "website" }, "http://{{url}}"],
 						["br"],
 						["span"]
 					]],
 					["br"]
-				], 
-				
-				data: data1
-				
-			});		
+				]
+			);		
 			
-			document.write(["", html1, html2, html3, html4].join("<hr/>"));
+			document.write(["", html4, html5].join("<hr/>"));
+			//document.write(["", html1, html2, html3, html4, html5].join("<hr/>"));
 
 		</script>
 	</head>
