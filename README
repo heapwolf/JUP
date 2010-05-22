@@ -1,6 +1,5 @@
 
-JUP (Javascript markUP) is an html generator. It has a clear and concise syntax for declaring markup using JavaScript arrays.
-Since JUP is native javascript, you can introduce native iterators and functions into the structure definitions.
+JUP (Javascript markUP) is an html generator. It has a clear and concise syntax for declaring markup using JavaScript arrays. Since JUP is native javascript, you can introduce native iterators and functions into the structure definitions.
 
 ["div"] // Renders "<div></div>"
 
