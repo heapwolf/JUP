@@ -11,7 +11,7 @@ This allows structures be data driven, and alleviates the need to use special ke
 
 JUP weighs in currently with most functionality done at about ~140 lines of code, it's really simple and it's MIT.
 
-There are so many of <%=these_template_engines%> out there and so many that mix content and code it boggles the mind, there's a number of micro-templating and markup generation solutions out there, but few of them address Separation Of Concerns. Designers should never need to confront code, and markup strings look awful in JS. JUP attempts to take the simplest approach to mapping javascript and data to markup production. Here are some examples...
+There are so many of <%=these_template_engines%> out there!! There's a number of micro-templating and markup generation solutions out there, but very few address Separation Of Concerns. Designers should never need to confront script code, and markup strings look awful in JS. JUP attempts to take the simplest approach to mapping javascript and data to markup production. Here are some examples...
 
 ["div"] // Renders "<div></div>"
 
