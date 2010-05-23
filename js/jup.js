@@ -132,7 +132,8 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 			}
 
             Util.lastout = (data !== null) ? Util.subst(Util.markup.join(""), data) : Util.markup.join("");
-            Util.markup = Util.attributes = []; // reset;
+            Util.markup = [];
+			Util.attributes = []; // reset;
 
             return Util.lastout;
         }
