@@ -57,8 +57,6 @@
 					["br", { "class": "tall" }]
 				]
 			);
-			
-			var html3 = [];
 
 			// a simple data structure.
 
@@ -83,7 +81,7 @@
 
 			// repeating a structure inside a static structure.
 			
-			var html4 = JUP.html(
+			var html3 = JUP.html(
 				["div", { "class": "foo" },
 					JUP.html(data1, ["span", "{{name}}", ["br"]])
 				]
@@ -91,7 +89,7 @@
 			
 			// a reusable structure.
 
-			var jup1 = [				
+			var jup1 = [
 				["div", { "class": "record" }, [
 					["span", { "class": "heading" }, JUP.data("name")],
 					["br"],
@@ -103,7 +101,7 @@
 			];
 			
 			// initiating data and structure together.
-			var html5 = JUP.html(data1, jup1);
+			var html4 = JUP.html(data1, jup1);
 
 			// useful variations on the same as above.
 			
@@ -111,8 +109,7 @@
 			//var html5 = JUP.html(data1, jup1);
 			//var html5 = JUP.html(jup1);
 			
-			document.write(["", html1, html2, html4, html5].join("<hr/>"));
-			//document.write(["", html1, html2, html3, html4, html5].join("<hr/>"));
+			document.write(["", html1, html2, html3, html4].join("<hr/>"));
 
 		</script>
 	</head>

@@ -2,6 +2,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
     var Util = {
 
+		selfClosingTags: ["area", "base", "basefont", "br", "hr", "input", "img", "link", "meta", ""],
         markup: [],
         attributes: [],
         lastout: [],
@@ -49,19 +50,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
                 if(typeof val[i] === "string" && i === 0) { // this must be a tag, its in the first position
 
-                    switch(val[i].toLowerCase()) {
-                        case "area":
-                        case "base":
-                        case "basefont":
-                        case "br":
-                        case "hr":
-                        case "input":
-                        case "img":
-                        case "link":
-                        case "meta":
-                            selfClosing = true;
-                        break;
-                    }
+					selfClosing = !!(Util.selfClosingTags.join(",").indexOf(val[i].toLowerCase() + ",") != -1)
 
                     // check to see if this array has any objects in it (check for attributes).
                     for(var j=i; j < val.length; j++) {
@@ -112,9 +101,10 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
         html: function() {
 
-			var args = Array.prototype.slice.call(arguments);
-			var structure = [], data = {};
-			
+			var args = Array.prototype.slice.call(arguments), 
+				structure = [], 
+				data = {};
+
 			if(args.length == 2) {
 				structure = args[1];
 				data = args[0];
@@ -142,8 +132,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 			}
 
             Util.lastout = (data !== null) ? Util.subst(Util.markup.join(""), data) : Util.markup.join("");
-            Util.markup = [];
-            Util.attributes = [];
+            Util.markup = Util.attributes = []; // reset;
 
             return Util.lastout;
         }
