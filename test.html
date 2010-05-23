@@ -16,7 +16,7 @@
 		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 
-			var html1 = {} /* JUP.html({}, [					
+			var html1 = JUP.html({}, [					
 				["div",
 					["h1", "a title",
 						["p", { "class": "normal" }, "some paragraph",
@@ -32,7 +32,7 @@
 				["div", { "test": "bar" }, "another div"]
 			]);
 
-			var html2 = {}; /* JUP.html([
+			var html2 = JUP.html([
 				
 					["div", "a div"],
 					["div", "another div"],
@@ -56,12 +56,11 @@
 			
 					["br", { "class": "tall" }]
 				]
-			); */
+			);
 			
-			var html3 = {} /* JUP.html({
-				structure: ["div", { "class": "foo" }, ["br"], "content"],
-				qty: 2 // how many instances of this markup to produce
-			}); */
+			var html3 = [];
+
+			// a simple data structure.
 
 			var data1 = [
 				{
@@ -82,25 +81,37 @@
 				}
 			];
 
-			var html4 ={};
-
-			var html5 = JUP.html({data: data1},
-
-				// The following shows two methods for stubbing out data
-				
-				[				
-					["div", { "class": "record" }, [
-						["span", { "class": "heading" }, JUP.data("name")],
-						["br"],
-						["span", { "class": "website" }, "http://{{url}}"],
-						["br"],
-						["span"]
-					]],
-					["br"]
-				]
-			);		
+			// repeating a structure inside a static structure.
 			
-			document.write(["", html4, html5].join("<hr/>"));
+			var html4 = JUP.html(
+				["div", { "class": "foo" },
+					JUP.html(data1, ["span", "{{name}}", ["br"]])
+				]
+			);
+			
+			// a reusable structure.
+
+			var jup1 = [				
+				["div", { "class": "record" }, [
+					["span", { "class": "heading" }, JUP.data("name")],
+					["br"],
+					["span", { "class": "website" }, "http://{{url}}"],
+					["br"],
+					["span"]
+				]],
+				["br"]
+			];
+			
+			// initiating data and structure together.
+			var html5 = JUP.html(data1, jup1);
+
+			// useful variations on the same as above.
+			
+			//var html5 = JUP.html({ data: data1, structure: jup1});		
+			//var html5 = JUP.html(data1, jup1);
+			//var html5 = JUP.html(jup1);
+			
+			document.write(["", html1, html2, html4, html5].join("<hr/>"));
 			//document.write(["", html1, html2, html3, html4, html5].join("<hr/>"));
 
 		</script>

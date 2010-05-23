@@ -106,20 +106,33 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
             return ["{{", str, "}}"].join("");
         },
 
-		toHTML: function(params) {
-			this.html(params, jup);
+		toHTML: function() {
+			this.html(arguments);
 		},
 
-        html: function(data, jup) {
+        html: function() {
 
 			var args = Array.prototype.slice.call(arguments);
-            var structure = Util.adopt(args.length == 2 ? args[1] : ((args[0] instanceof Array) ? args[0] : args[0].structure));
-			data = data || args[0].data;
+			var structure = [], data = {};
+			
+			if(args.length == 2) {
+				structure = args[1];
+				data = args[0];
+			}
+			else {
+				if(args[0] instanceof Array) {
+					structure = args[0];
+				}
+				else {
+					data = args[0].data || null;
+					structure = args[0].structure;
+				}
+			}
 
             if(data !== null && data.length) {
 				for(var i=0; i < data.length; i++) {
 				    Util.resolve(structure);
-				    Util.markup.push(Util.subst(Util.markup.join(""), data[i]));
+				    Util.markup = [Util.subst(Util.markup.join(""), data[i])];
 				}
 			} else if(data !== null) {
 			    Util.resolve(structure);
