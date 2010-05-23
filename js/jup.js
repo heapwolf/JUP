@@ -50,8 +50,20 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
                 if(typeof val[i] === "string" && i === 0) { // this must be a tag, its in the first position
 
-					selfClosing = !!(Util.selfClosingTags.join(",").indexOf(val[i].toLowerCase() + ",") != -1)
-
+					switch(val[i].toLowerCase()) {
+					    case "area":
+					    case "base":
+					    case "basefont":
+					    case "br":
+					    case "hr":
+					    case "input":
+					    case "img":
+					    case "link":
+					    case "meta":
+					        selfClosing = true;
+					    break;
+					}
+					
                     // check to see if this array has any objects in it (check for attributes).
                     for(var j=i; j < val.length; j++) {
 
