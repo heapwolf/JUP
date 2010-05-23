@@ -2,14 +2,14 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
     var Util = {
 
-		selfClosingTags: ["area", "base", "basefont", "br", "hr", "input", "img", "link", "meta", ""],
+        selfClosingTags: ["area", "base", "basefont", "br", "hr", "input", "img", "link", "meta", ""],
         markup: [],
         attributes: [],
         lastout: [],
 
         adopt: function(o) {
-            var c = (o instanceof Array) ? [] : {}; // TODO: fix lame ass array type check
-            for (i in o) {
+            var c = (o instanceof Array) ? [] : {};
+            for (var i in o) {
                 if (o[i] && typeof o[i] == "object") {
                     c[i] = this.adopt(o[i]);
                 }
@@ -21,9 +21,9 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
         },
 
         subst: function(s, o) { // inspired by doug crockford's "supplant" method.
-			
+
             var count = -1;
-            return s.replace(/{{([^{}]*)}}/g,
+            return s.replace(/\{\{([^\{\}]*)\}\}/g,
                 function(str, r) {
                     if(!isNaN(r)) {
                         return o[r];
@@ -50,20 +50,20 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
                 if(typeof val[i] === "string" && i === 0) { // this must be a tag, its in the first position
 
-					switch(val[i].toLowerCase()) {
-					    case "area":
-					    case "base":
-					    case "basefont":
-					    case "br":
-					    case "hr":
-					    case "input":
-					    case "img":
-					    case "link":
-					    case "meta":
-					        selfClosing = true;
-					    break;
-					}
-					
+                    switch(val[i].toLowerCase()) {
+                        case "area":
+                        case "base":
+                        case "basefont":
+                        case "br":
+                        case "hr":
+                        case "input":
+                        case "img":
+                        case "link":
+                        case "meta":
+                            selfClosing = true;
+                        break;
+                    }
+
                     // check to see if this array has any objects in it (check for attributes).
                     for(var j=i; j < val.length; j++) {
 
@@ -98,8 +98,8 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     this.markup.push(["</", tag, ">"].join("")); // close it!
                 }
             }
-        },
-    }
+        }
+    };
 
     return {
 
@@ -107,45 +107,41 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
             return ["{{", str, "}}"].join("");
         },
 
-		toHTML: function() {
-			this.html(arguments);
-		},
-
         html: function() {
 
-			var args = Array.prototype.slice.call(arguments), 
-				structure = [], 
-				data = {};
+            var args = Array.prototype.slice.call(arguments),
+                structure = [],
+                data = {};
 
-			if(args.length == 2) {
-				structure = args[1];
-				data = args[0];
-			}
-			else {
-				if(args[0] instanceof Array) {
-					structure = args[0];
-				}
-				else {
-					data = args[0].data || null;
-					structure = args[0].structure;
-				}
-			}
+            if(args.length == 2) {
+                structure = args[1];
+                data = args[0];
+            }
+            else {
+                if(args[0] instanceof Array) {
+                    structure = args[0];
+                }
+                else {
+                    data = args[0].data || null;
+                    structure = args[0].structure;
+                }
+            }
 
             if(data !== null && data.length) {
-				for(var i=0; i < data.length; i++) {
-				    Util.resolve(structure);
-				    Util.markup = [Util.subst(Util.markup.join(""), data[i])];
-				}
-			} else if(data !== null) {
-			    Util.resolve(structure);
-			    Util.markup = [Util.subst(Util.markup.join(""), data)];
-			} else {
-				Util.resolve(structure);
-			}
+                for(var i=0; i < data.length; i++) {
+                    Util.resolve(structure);
+                    Util.markup = [Util.subst(Util.markup.join(""), data[i])];
+                }
+            } else if(data !== null) {
+                Util.resolve(structure);
+                Util.markup = [Util.subst(Util.markup.join(""), data)];
+            } else {
+                Util.resolve(structure);
+            }
 
             Util.lastout = (data !== null) ? Util.subst(Util.markup.join(""), data) : Util.markup.join("");
             Util.markup = [];
-			Util.attributes = []; // reset;
+            Util.attributes = []; // reset;
 
             return Util.lastout;
         }
