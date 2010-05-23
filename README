@@ -9,7 +9,7 @@ for instance: ["{{tag}}", { "class": "foo" }, "some {{value}}", ["br"]]
 
 This allows structures be data driven, and alleviates the need to use special keys like "cls", you can just use "class". Works great for SSJS and CSJS.
 
-JUP weighs in currently with most functionality done at about ~140 lines of code, it's really simple and it's MIT.
+JUP weighs in currently with most functionality done at about ~140 lines of code, it's really simple.
 
 There are so many of <%=these_template_engines%> out there!! There's a number of micro-templating and markup generation solutions out there, but very few address Separation Of Concerns. Designers should never need to confront script code, and markup strings look awful in JS. JUP attempts to take the simplest approach to mapping javascript and data to markup production. Here are some examples...
 
