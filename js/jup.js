@@ -1,14 +1,13 @@
 var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
     var Util = {
-
-        selfClosingTags: ["area", "base", "basefont", "br", "hr", "input", "img", "link", "meta", ""],
+	
         markup: [],
         attributes: [],
         lastout: [],
 
         adopt: function(o) {
-            var c = (o instanceof Array) ? [] : {};
+            var c = (Object.prototype.toString.call(o) == "[object Array]") ? [] : {};
             for (var i in o) {
                 if (o[i] && typeof o[i] == "object") {
                     c[i] = this.adopt(o[i]);
@@ -30,7 +29,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     }
 
                     count++;
-                    return o[(o instanceof Array) ? count : r];
+                    return o[(Object.prototype.toString.call(o) == "[object Array]") ? count : r];
                 }
             );
         },
@@ -67,7 +66,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     // check to see if this array has any objects in it (check for attributes).
                     for(var j=i; j < val.length; j++) {
 
-                        if(!(val[j] instanceof Array) && typeof val[j] == "object") {
+                        if(!(Object.prototype.toString.call(val[j]) == "[object Array]") && typeof val[j] == "object") {
 
                             var a = val[j];
 
@@ -118,7 +117,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                 data = args[0];
             }
             else {
-                if(args[0] instanceof Array) {
+                if(Object.prototype.toString.call(args[0]) == "[object Array]") {
                     structure = args[0];
                 }
                 else {
