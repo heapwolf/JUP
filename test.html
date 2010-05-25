@@ -9,29 +9,25 @@
 			h3 { font-weight: bold; color: #000; }
 			hr { height: 14px; border: 1px #ddd solid; }
 
-			.heading a { font-size: 18px; color: #b55337; font-weight: bold; }
-			.website a { font-size: 18px; color: #666; }
+			.heading { font-size: 18px; color: #b55337; font-weight: bold; }
+			.website { font-size: 18px; color: #666; }
 		</style>
 		
 		<script src="js/jup.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 
-			var html1 = JUP.html({}, [					
+			var html1 = JUP.html([
 				["div",
-					["h1", "a title",
-						["p", { "class": "normal" }, "some paragraph",
-							[
-								["b", "bold text"],
-								["img", { "src": "images/sample.png" }],
-								["br"],
-								["span", "test"]
-							]
-						]
-					]
+					["span", { "class": "heading" }, "fooooooo"],
+					["br"],
+					["span", { "class": "heading" }, "fooooooo"],
+					["br"],
+					["span"]
 				],
-				["div", { "test": "bar" }, "another div"]
-			]);
-
+				["br"]
+			]); // ~Firebug Profile: (0.181ms, 10 calls)
+			
+		
 			var html2 = JUP.html([
 				
 					["div", "a div"],
@@ -43,15 +39,15 @@
 					["div", "some content",
 						["a", { "href": "#" }, "with a link"]
 					],
-
+			
 					(function() {
-
+			
 						var tags = [];
 						for(var i=1; i < 11; i++) {
 							tags.push(["span", "test #" + i]);
 						}
 						return tags;
-
+			
 					})(),
 			
 					["br", { "class": "tall" }]
@@ -87,22 +83,27 @@
 				]
 			);
 			
+			//var html1 = JUP.html(["div"])
+			//document.write(html1)
+			//document.write("<hr/>")			
+			//var html2 = JUP.html([["div"], ["div"]])
+						
 			// a reusable structure.
 			
 			// JUP.data("whatever") just keeps you fron having to see {{whatever}} items in the strings. 
 			// it keeps the surface looking like pure JS.
 
 			var jup1 = [
-				["div", { "class": "record" }, [
+				["div", { "class": "record" },
 					["span", { "class": "heading" }, JUP.data("name")],
 					["br"],
 					["span", { "class": "website" }, "http://{{url}}"],
 					["br"],
 					["span"]
-				]],
+				],
 				["br"]
 			];
-			
+		
 			// initiating data and structure together.
 			var html4 = JUP.html(data1, jup1);
 
@@ -111,6 +112,8 @@
 			//var html5 = JUP.html({ data: data1, structure: jup1});		
 			//var html5 = JUP.html(data1, jup1);
 			//var html5 = JUP.html(jup1);
+			
+			//document.write(["", html1, html2, html3, html4].join("<hr/>"));
 			
 			document.write(["", html1, html2, html3, html4].join("<hr/>"));
 
