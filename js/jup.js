@@ -53,7 +53,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                 }
             }
             if(count-1 == o.length) {
-                console.log(c.join(""))
                 return [c.join("")];
             }
         }
