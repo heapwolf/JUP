@@ -4,14 +4,13 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
         translate: function (o, data) {
 
-            var c = [], atts = []; var count = 1;
+            var c = [], atts = [], count = 1, selfClosing = false;
             var replace = function(str, r) { try { return data[r]; } catch(ex) {} };
 
             for (var i in o) {
                 if (o.hasOwnProperty(i) ) {
                     count++;
                     if (o[i] && typeof o[i] == "object") {
-
                         if(Object.prototype.toString.call(o[i]) != "[object Array]") {
                             for(var attribute in o[i]) {
                                 if (o[i].hasOwnProperty(attribute)) {
@@ -26,18 +25,35 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                         }
                     }
                     else {
-
                         c[i] = o[i].replace(/\{\{([^\{\}]*)\}\}/g, replace);
                     }
 
                     if(typeof c[0] == "string") {
-                        c[0] = ["<", o[0], atts.join(""), ">"].join("");
-                        c.push("</" + o[0] + ">");
+                        selfClosing = false;
+                        switch(c[0].toLowerCase()) {
+                            case "area":
+                            case "base":
+                            case "basefont":
+                            case "br":
+                            case "hr":
+                            case "input":
+                            case "img":
+                            case "link":
+                            case "meta":
+                                selfClosing = true;
+                            break;
+                        }
+    
+                        c[0] = ["<", o[0], atts.join(""), (selfClosing ? "/>" : ">")].join("");
+
+                        if(selfClosing == false) { 
+                            c.push("</" + o[0] + ">"); 
+                        }
                     }
                 }
             }
-
             if(count-1 == o.length) {
+                console.log(c.join(""))
                 return [c.join("")];
             }
         }
@@ -50,9 +66,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
         },
         html: function() {
 
-             var args = Array.prototype.slice.call(arguments),
-                structure = [],
-                data = {};
+            var args = Array.prototype.slice.call(arguments), structure = [], data = {};
 
             if(args.length == 2) {
                 structure = args[1];
@@ -67,7 +81,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     structure = args[0].structure;
                 }
             }
-
             if(Object.prototype.toString.call(data) == "[object Array]") {
 
                 var copystack = [];
@@ -78,13 +91,11 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                 return copystack.join("");
             }
             else if(data) {
-
-                for(var d=0; d < data.length; d++) {
+                for(var d=0; d < data.length; d++) {    
                     return Util.translate(args[2] ? structure : Util.translate(structure)[0], data[d]);
                 }
             }
-
-            return Util.translate(structure, data)[0];
+            return Util.translate(structure)[0];
         }
     };
 })();
