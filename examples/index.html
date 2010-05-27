@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+		<title>JUP - a Javascript HTML/XML generator </title>
+		<style type="text/css" media="screen">
+			/* not at all important, just for testing */
+			html * { font-family: Arial; color: #666; }
+			h1 { color: #b55337; }
+			h3 { font-weight: bold; color: #000; }
+			hr { height: 14px; border: 1px #ddd solid; }
+
+			.heading { font-size: 18px; color: #b55337; font-weight: bold; }
+			.website { font-size: 18px; color: #666; }
+			
+			#code{ width:500px; height:400px;}
+			#output{ width:500px; height:400px;}
+		</style>
+		
+		<!-- JUP.js is included from the root directory js folder, not the /examples/js folder -->
+		<script src="../js/jup.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- include jQuery to help with the example page   ^_^   -->
+    <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		
+		<!-- include debug.log library for easy and safe console debugging -->
+    <script src="js/debug.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script type="text/javascript" charset="utf-8">
+
+			var html1 = JUP.html([
+				["div",
+					["span", { "class": "heading" }, "fooooooo"],
+					["br"],
+					["span", { "class": "heading" }, "fooooooo"],
+					["br"],
+					["span"]
+				],
+				["br"]
+			]); // ~Firebug Profile: (0.181ms, 10 calls)
+			
+		
+			var html2 = JUP.html([
+				
+					["div", "a div"],
+					["div", "another div"],
+					["div", { "class": "normal" }, "div with attributes"],
+					["div", 
+						["div", "a nested div"]
+					],
+					["div", "some content",
+						["a", { "href": "#" }, "with a link"]
+					],
+			
+					(function() {
+			
+						var tags = [];
+						for(var i=1; i < 11; i++) {
+							tags.push(["span", "test #" + i]);
+						}
+						return tags;
+			
+					})(),
+			
+					["br", { "class": "tall" }]
+				]
+			);
+
+			// a simple data structure.
+
+			var data1 = [
+				{
+					name: "Fern Micro",
+					url: "github.com/fernmicro",
+					cities: [
+						"New Orleans, LA",
+						"San Francisco, CA"
+					]
+				},
+				{
+					name: "Bucky Felini",
+					url: "github.com/bucky",
+					cities: [
+						"Philly, PA",
+						"NYC, NY"
+					]
+				}
+			];
+
+			// repeating a structure inside a static structure.
+			
+			var html3 = JUP.html(
+				["div", { "class": "foo" },
+					JUP.html(data1, ["span", "{{name}}", ["br"]])
+				]
+			);
+			
+			//var html1 = JUP.html(["div"])
+			//document.write(html1)
+			//document.write("<hr/>")			
+			//var html2 = JUP.html([["div"], ["div"]])
+						
+			// a reusable structure.
+			
+			// JUP.data("whatever") just keeps you fron having to see {{whatever}} items in the strings. 
+			// it keeps the surface looking like pure JS.
+
+			var jup1 = [
+				["div", { "class": "record" },
+					["span", { "class": "heading" }, JUP.data("name")],
+					["br"],
+					["span", { "class": "website" }, "http://{{url}}"],
+					["br"],
+					["span"]
+				],
+				["br"]
+			];
+		
+			// initiating data and structure together.
+			var html4 = JUP.html(data1, jup1);
+
+			// useful variations on the same as above.
+			
+			//var html5 = JUP.html({ data: data1, structure: jup1});		
+			//var html5 = JUP.html(data1, jup1);
+			//var html5 = JUP.html(jup1);
+			
+			//document.write(["", html1, html2, html3, html4].join("<hr/>"));
+			
+			document.write(["", html1, html2, html3, html4].join("<hr/>"));
+
+      // jquery document ready event
+      $(document).ready(function(){
+        
+        // bind to the click event of the parseJUP button
+        $('#parseJUP').click(function(){
+          
+          // we could make this a bit easier to read
+          debug.log(JUP.html(eval($('#code').val()))); 
+          
+          // parse the JSON from the textarea with JUP and output results to DIV
+          $('#output').html(JUP.html(eval($('#code').val())));
+
+        });
+        
+      });
+
+		</script>
+	</head>
+	<body>
+	  
+	  <table>
+	    <tr valign = "top">
+	     <td>
+        <h3>JSON IN</h3>
+        <textarea id = "code">[
+  ["div", "a div"],
+    ["div", "another div"],
+    ["div", { "class": "normal" }, "div with attributes"],
+    ["div", 
+      ["div", "a nested div"]
+    ],
+    ["div", "some content",
+      ["a", { "href": "#" }, "with a link"]
+    ],
+(function() {
+
+		var tags = [];
+		for(var i=1; i < 11; i++) {
+			tags.push(["span", "test #" + i]);
+		}
+		return tags;
+
+	})(),
+
+	["br", { "class": "tall" }]
+]</textarea>
+      </td>
+       <td>
+         <h3>HTML OUT</h3>
+         <div id = "output">
+         </div>
+       </td>
+     </tr>
+     <tr>
+      <td colspan = "2"><input id = "parseJUP" type = "button" value = "JUP IT UP!"></td>
+     </tr>
+    </table>
+  </body>
+</html>
