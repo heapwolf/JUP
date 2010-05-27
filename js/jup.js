@@ -59,7 +59,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
     };
 
     return {
-
+		version: "0.2",
         data: function(str) {
             return ["{{", str, "}}"].join("");
         },

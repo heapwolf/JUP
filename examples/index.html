@@ -19,6 +19,9 @@
 		<!-- JUP.js is included from the root directory js folder, not the /examples/js folder -->
 		<script src="../js/jup.js" type="text/javascript" charset="utf-8"></script>
 
+		JUP Sandbox
+		<hr/>
+
     <!-- include jQuery to help with the example page   ^_^   -->
     <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
 		
@@ -27,47 +30,9 @@
 		
 		<script type="text/javascript" charset="utf-8">
 
-			var html1 = JUP.html([
-				["div",
-					["span", { "class": "heading" }, "fooooooo"],
-					["br"],
-					["span", { "class": "heading" }, "fooooooo"],
-					["br"],
-					["span"]
-				],
-				["br"]
-			]); // ~Firebug Profile: (0.181ms, 10 calls)
+		var data = {
 			
-		
-			var html2 = JUP.html([
-				
-					["div", "a div"],
-					["div", "another div"],
-					["div", { "class": "normal" }, "div with attributes"],
-					["div", 
-						["div", "a nested div"]
-					],
-					["div", "some content",
-						["a", { "href": "#" }, "with a link"]
-					],
-			
-					(function() {
-			
-						var tags = [];
-						for(var i=1; i < 11; i++) {
-							tags.push(["span", "test #" + i]);
-						}
-						return tags;
-			
-					})(),
-			
-					["br", { "class": "tall" }]
-				]
-			);
-
-			// a simple data structure.
-
-			var data1 = [
+			"sample1": [
 				{
 					name: "Fern Micro",
 					url: "github.com/fernmicro",
@@ -84,27 +49,57 @@
 						"NYC, NY"
 					]
 				}
-			];
+			]
+		};
 
-			// repeating a structure inside a static structure.
+		var samples = { // could perhaps get loaded into the textarea from a button with a description about whats unique about the structure.
 			
-			var html3 = JUP.html(
+			"sample1": [
+			
+				["div",
+					["span", { "class": "heading" }, "fooooooo"],
+					["br"],
+					["span", { "class": "heading" }, "fooooooo"],
+					["br"],
+					["span"]
+				],
+				["br"]
+			],
+			
+			"sample2": [
+			
+				["div", "a div"],
+				["div", "another div"],
+				["div", { "class": "normal" }, "div with attributes"],
+				["div", 
+					["div", "a nested div"]
+				],
+				["div", "some content",
+					["a", { "href": "#" }, "with a link"]
+				],
+
+				(function() {
+
+					var tags = [];
+					for(var i=1; i < 11; i++) {
+						tags.push(["span", "test #" + i]);
+					}
+					return tags;
+
+				})(),
+
+				["br", { "class": "tall" }]
+			],
+			
+			"sample3": [
+			
 				["div", { "class": "foo" },
 					JUP.html(data1, ["span", "{{name}}", ["br"]])
 				]
-			);
+			],
 			
-			//var html1 = JUP.html(["div"])
-			//document.write(html1)
-			//document.write("<hr/>")			
-			//var html2 = JUP.html([["div"], ["div"]])
-						
-			// a reusable structure.
+			sample4: [
 			
-			// JUP.data("whatever") just keeps you fron having to see {{whatever}} items in the strings. 
-			// it keeps the surface looking like pure JS.
-
-			var jup1 = [
 				["div", { "class": "record" },
 					["span", { "class": "heading" }, JUP.data("name")],
 					["br"],
@@ -113,20 +108,32 @@
 					["span"]
 				],
 				["br"]
-			];
-		
-			// initiating data and structure together.
-			var html4 = JUP.html(data1, jup1);
+			]
+		};
+		// a simple data structure.
 
-			// useful variations on the same as above.
-			
-			//var html5 = JUP.html({ data: data1, structure: jup1});		
-			//var html5 = JUP.html(data1, jup1);
-			//var html5 = JUP.html(jup1);
-			
-			//document.write(["", html1, html2, html3, html4].join("<hr/>"));
-			
-			document.write(["", html1, html2, html3, html4].join("<hr/>"));
+		// repeating a structure inside a static structure.
+
+		//var html1 = JUP.html(["div"])
+		//document.write(html1)
+		//document.write("<hr/>")			
+		//var html2 = JUP.html([["div"], ["div"]])
+					
+		// a reusable structure.
+		
+		// JUP.data("whatever") just keeps you fron having to see {{whatever}} items in the strings. 
+		// it keeps the surface looking like pure JS.
+
+		// initiating data and structure together.
+
+		// useful variations on the same as above.
+		
+		//var html5 = JUP.html({ data: data1, structure: jup1});		
+		//var html5 = JUP.html(data1, jup1);
+		//var html5 = JUP.html(jup1);
+		
+		//document.write(["", html1, html2, html3, html4].join("<hr/>"));
+
 
       // jquery document ready event
       $(document).ready(function(){
