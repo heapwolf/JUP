@@ -96,9 +96,16 @@
             if(typeof ARR == 'undefined'){
               var ARR = [];
             }
-            var div = document.createElement('div');
-            div.innerHTML = items;
-            var elements = div.childNodes;
+            
+            if(typeof items == 'string'){
+              var div = window.document.createElement('div');
+              div.innerHTML = items;
+              var elements = div.childNodes;
+            }
+            else{
+              var elements = items;
+            }
+            
             for(var i = 0; i < elements.length; i++){
               var e = elements[i];
               var children = e.childNodes;
