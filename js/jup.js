@@ -9,7 +9,26 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
             for (var i in o) {
                 if (o.hasOwnProperty(i) ) {
+
                     count++;
+                    selfClosing = false;
+
+                    if(typeof c[0] == "string") { 
+                        switch(o[0].toLowerCase()) {
+                            case "area":
+                            case "base":
+                            case "basefont":
+                            case "br":
+                            case "hr":
+                            case "input":
+                            case "img":
+                            case "link":
+                            case "meta":
+                                selfClosing = true;
+                            break;
+                        }                    
+                    }
+
                     if (o[i] && typeof o[i] == "object") {
                         if(Object.prototype.toString.call(o[i]) != "[object Array]") {
                             for(var attribute in o[i]) {
@@ -29,21 +48,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     }
 
                     if(typeof c[0] == "string") {
-                        selfClosing = false;
-                        switch(c[0].toLowerCase()) {
-                            case "area":
-                            case "base":
-                            case "basefont":
-                            case "br":
-                            case "hr":
-                            case "input":
-                            case "img":
-                            case "link":
-                            case "meta":
-                                selfClosing = true;
-                            break;
-                        }
-    
+
                         c[0] = ["<", o[0], atts.join(""), (selfClosing ? "/>" : ">")].join("");
 
                         if(selfClosing == false) { 
@@ -95,6 +100,6 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                 }
             }
             return Util.translate(structure)[0];
-        }
+        } 
     };
 })();
