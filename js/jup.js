@@ -95,6 +95,34 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                 }
             }
             return Util.translate(structure)[0];
+        },
+        
+        parseDOM:function(items, ARR){
+          if(typeof ARR == 'undefined'){
+            var ARR = [];
+          }
+          $(items).each(function(i,e){
+
+            if($(e).children().length){
+              JUP.parseDOM($(e).children(), ARR);  
+            }
+            else{
+              var arr = [];
+              arr.push($(e)[0].tagName);
+              if($(e)[0].attributes.length){
+                $($(e)[0].attributes).each(function(i,e){
+                    var attr = {};
+                    attr[e.name] = e.value; 
+                    arr.push(attr);
+                })
+              }
+              if($(e).html().length){
+                arr.push($(e).html());
+              }
+              ARR.push(arr);
+            }
+         });
+          return ARR;
         }
     };
 })();
