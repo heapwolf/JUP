@@ -19,9 +19,6 @@
 		<!-- JUP.js is included from the root directory js folder, not the /examples/js folder -->
 		<script src="../js/jup.js" type="text/javascript" charset="utf-8"></script>
 
-		JUP Sandbox
-		<hr/>
-
     <!-- include jQuery to help with the example page   ^_^   -->
     <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
 		
@@ -140,10 +137,7 @@
         
         // bind to the click event of the parseJUP button
         $('#parseJUP').click(function(){
-          
-          // we could make this a bit easier to read
-          debug.log(JUP.html(eval($('#code').val()))); 
-          
+                    
           // parse the JSON from the textarea with JUP and output results to DIV
           var html = JUP.html(eval($('#code').val()));
           $('#output').val(html);
@@ -151,54 +145,42 @@
           // update the htmlCode textarea as well
           $('#HTMLcode').val(html)
 
-        });
-        
-        $('#parseHTML').click(function(){
+          var jup = JUP.parse($('#HTMLcode').val());
           
-          // parse the JSON from the textarea with JUP and output results to DIV
-          var jup = JUP.parseDOM($('#HTMLcode').val());
-          
-          
-          debug.log(jup);
           $('#HTMLoutput').val(JSON.stringify(jup));
           
-          // update the htmlCode textarea as well
-          //$('#HTMLcode').val(html)
-          
+          if($('#code').val() == $('#HTMLoutput').val()){
+            $('#status').html('WIN!');
+          }
+          else{
+            $('#status').html('FAIL!');
+          }
+
         });
         
+        // parse on document ready for fun
+        $('#parseJUP').trigger('click');
       });
 
 		</script>
 	</head>
 	<body>
 	  
+	  JUP Sandbox
+		<hr/>
+	  Parser Status: <span id = "status"></span>
 	  <table>
+	    <tr>
+       <td colspan = "2">
+         <input id = "parseJUP" type = "button" value = "JUP IT UP!">
+       </td>
+      </tr>
+      
+	    
 	    <tr valign = "top">
 	     <td>
         <h3>JUP IN</h3>
-        <textarea id = "code" class = "code">[
-  ["div", "a div"],
-    ["div", "another div"],
-    ["div", { "class": "normal" }, "div with attributes"],
-    ["div", 
-      ["div", "a nested div"]
-    ],
-    ["div", "some content",
-      ["a", { "href": "#" }, "with a link"]
-    ],
-(function() {
-
-		var tags = [];
-		for(var i=1; i < 11; i++) {
-			tags.push(["span", "test #" + i]);
-		}
-		return tags;
-
-	})(),
-
-	["br", { "class": "tall" }]
-]</textarea>
+        <textarea id = "code" class = "code">[["DIV","a div"],["DIV","another div"],["DIV",{"class":"normal"},"div with attributes"],["DIV","a nested div"],["A",{"href":"#"},"with a link"],["SPAN","test #1"],["SPAN","test #2"],["SPAN","test #3"],["SPAN","test #4"],["SPAN","test #5"],["SPAN","test #6"],["SPAN","test #7"],["SPAN","test #8"],["SPAN","test #9"],["SPAN","test #10"],["BR",{"class":"tall"}]]</textarea>
       </td>
        <td>
          <h3>HTML OUT</h3>
@@ -206,14 +188,6 @@
          </div>
        </td>
      </tr>
-       <tr>
-        <td>
-          <input id = "parseJUP" type = "button" value = "JUP 2 HTML!">
-        </td>
-        <td>
-           <input id = "parseHTML" type = "button" value = "HTML 2 JUP!">
-        </td>
-       </tr>
        <tr valign = "top">
          <td>
            <h3>HTML IN</h3>
