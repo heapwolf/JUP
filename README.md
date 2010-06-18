@@ -1,7 +1,7 @@
 
 ![Alt text](http://29.media.tumblr.com/tumblr_l2xo55ndbA1qbo0zio1_r1_400.png)
 
-** JUP Style JSON is now a STANDARD. **
+* JUP Style JSON is now a STANDARD. *
 The spec can be found at http://jsonml.org/ which is managed by Stephen
 
 ** JUP: Javascript IN, markup OUT. **
