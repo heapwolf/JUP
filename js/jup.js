@@ -3,7 +3,11 @@
       var Util = {
           translate: function (o, data) {
               var c = [], atts = [], count = 1, selfClosing = false;
-              var replace = function(str, r) { try { return data[r]; } catch(ex) {} };
+              var replace = function(target) {
+	              return target.replace(/\{\{([^\{\}]*)\}\}/g, function(str, r) {
+                      try { return data[r]; } catch(ex) {}
+                  });
+              };
               for (var i in o) {
                   if (o.hasOwnProperty(i) ) {
                       count++;
@@ -11,7 +15,7 @@
                           if(Object.prototype.toString.call(o[i]) != "[object Array]") {
                               for(var attribute in o[i]) {
                                   if (o[i].hasOwnProperty(attribute)) {
-                                      atts.push([" ", attribute, "=\"", o[i][attribute], "\""].join(""));
+                                      atts.push([" ", attribute, "=\"", replace(o[i][attribute]), "\""].join(""));
                                   }
                               }
                               c[i] = "";
@@ -22,7 +26,7 @@
                           }
                       }
                       else {
-                          c[i] = o[i].replace(/\{\{([^\{\}]*)\}\}/g, replace);
+                          c[i] = replace(o[i]);
                       }
                       if(typeof c[0] == "string") {
                           selfClosing = false;
