@@ -15,7 +15,7 @@
                           if(Object.prototype.toString.call(o[i]) != "[object Array]") {
                               for(var attribute in o[i]) {
                                   if (o[i].hasOwnProperty(attribute)) {
-                                      atts.push([" ", attribute, "=\"", replace(o[i][attribute]), "\""].join(""));
+                                      atts.push([" ", replace(attribute), "=\"", replace(o[i][attribute]), "\""].join(""));
                                   }
                               }
                               c[i] = "";
