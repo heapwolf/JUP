@@ -1,15 +1,23 @@
+
 var JUP = (typeof JUP != "undefined") ? JUP : (function() {
 
     var Util = {
 
+        isArray: (function() { return Array.isArray || function(obj) {
+            // isArray function adapted from underscore.js
+            return !!(obj && obj.concat && obj.unshift && !obj.callee); 
+        }})(),
+
+        sup: function(target, data) {
+            
+            return target.replace(/\{\{([^\{\}]*)\}\}/g, function(str, r) {
+                try { return data[r]; } catch(ex) {}
+            });
+        },
+
         translate: function (o, data) {
 
             var c = [], atts = [], count = 1, selfClosing = false;
-            var replace = function(target) {
-                return target.replace(/\{\{([^\{\}]*)\}\}/g, function(str, r) {
-                    try { return data[r]; } catch(ex) {}
-                });
-            };
 
             for (var i in o) {
                 if (o.hasOwnProperty(i) ) {
@@ -34,10 +42,11 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     }
 
                     if (o[i] && typeof o[i] == "object") {
-                        if(Object.prototype.toString.call(o[i]) != "[object Array]") {
+                        
+                        if(!Util.isArray(o[i])) {
                             for(var attribute in o[i]) {
                                 if (o[i].hasOwnProperty(attribute)) {
-                                    atts.push([" ", attribute, "=\"", replace(o[i][attribute]), "\""].join(""));
+                                    atts.push([" ", Util.sup(attribute, data).replace(/ /g, "-"), "=\"", Util.sup(o[i][attribute], data), "\""].join(""));
                                 }
                             }
                             c[i] = "";
@@ -48,7 +57,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                         }
                     }
                     else {
-                        c[i] = replace(o[i]);
+                        c[i] = Util.sup(o[i], data);
                     }
 
                     if(typeof c[0] == "string") {
@@ -81,7 +90,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                 data = args[0];
             }
             else {
-                if(Object.prototype.toString.call(args[0]) == "[object Array]") {
+                if(Util.isArray(args[0])) {
                     structure = args[0];
                 }
                 else {
@@ -89,7 +98,7 @@ var JUP = (typeof JUP != "undefined") ? JUP : (function() {
                     structure = args[0].structure;
                 }
             }
-            if(Object.prototype.toString.call(data) == "[object Array]") {
+            if(Util.isArray(data)) {
 
                 var copystack = [];
 
