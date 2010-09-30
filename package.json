@@ -1,0 +1,17 @@
+{
+  "name": "jup",
+  "description": "create html from pure json.",
+  "version": "0.2.0",
+  "repository": {
+      "type": "git",
+      "url": "http://github.com/hij1nx/JUP.git" 
+  },
+  "author": "hij1nx <hij1nx@gmail.com>",
+  "contributors": [ 
+    { "name": "Matthew Bergman"}, 
+    { "name": "Marak Squires"} 
+  ],
+  "keywords": ["jscon", "html", "template"],
+  "main": "lib/jup.js",
+  "engines": { "node": ">= 0.1.98" }
+}
