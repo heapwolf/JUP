@@ -77,8 +77,8 @@
 
 			// repeating a structure inside a static structure.
 			
-			var html3 = JUP.html(
-				["div", { "class": "foo" },
+			var html3 = JUP.html(data1,
+				["div", { "{{name}}": "{{name}}" },
 					JUP.html(data1, ["span", "{{name}}", ["br"]])
 				]
 			);
