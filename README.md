@@ -29,7 +29,7 @@ This allows jup-arrays be data driven. No special keys or cryptic symbols like "
 
     ["{{namespace}}:{{tag}}", { "{{somekey}}": "foo" }, "content", ["div"]] // Renders: <ns:tag bar="foo">content<div></div></div>
 
-** Exiting the dark ages of templating. **
+** Exiting the dark ages of strongly coupled templating. **
 
 Remember "Classic ASP" or "Java Beans"? they never really understood the concept of the DOM. They chose to ignore it and just stub in some placeholders like <%=myVariable%> for server generated content then just rewrite the file.
 
