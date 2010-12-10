@@ -82,16 +82,6 @@
 					JUP.html(data1, ["span", "{{name}}", ["br"]])
 				]
 			);
-			
-			//var html1 = JUP.html(["div"])
-			//document.write(html1)
-			//document.write("<hr/>")			
-			//var html2 = JUP.html([["div"], ["div"]])
-						
-			// a reusable structure.
-			
-			// JUP.data("whatever") just keeps you fron having to see {{whatever}} items in the strings. 
-			// it keeps the surface looking like pure JS.
 
 			var jup1 = [
 				["div", { "class": "record" },
@@ -106,13 +96,6 @@
 		
 			// initiating data and structure together.
 			var html4 = JUP.html(data1, jup1);
-
-			// useful variations on the same as above.
-			
-			//var html5 = JUP.html({ data: data1, structure: jup1});		
-			//var html5 = JUP.html(data1, jup1);
-			
-			//document.write(["", html1, html2, html3, html4].join("<hr/>"));
 			
 			document.write(["", html1, html2, html3, html4].join("<hr/>"));
 
