@@ -1,18 +1,54 @@
 
-![Alt text](http://29.media.tumblr.com/tumblr_l2xo55ndbA1qbo0zio1_r1_400.png)
+## What
+Large strings of markup inside your javascript look like **shit**. JUP is a fast JSON to Markupup Language engine that fixes this problem.
 
-** JUP: Javascript IN, markup OUT. **
-
-The purpose of this is to promote the Separation of Concerns principle, and keep markup out of javascript. 
-JUP generates markup elements which are declared using nested arrays, for instance:
+## How
 
     ["div", { "class": "foo" }, "some text", ["br"]]
 
-Args can come in any order as long as the first is a tag name. Any arbitrary string can become an element, no registering templates you can simply assign the jup-array to a variable and reuse it. If an object literal is provided in your jup-array, it's directly mapped to attributes of the element. Also, since all values in the JUP structure are strings, they can be stubbed out with mustache style {{tokens}}, they'll get filled in each time you use your jup-array, for instance: 
+JUP is simple, you provide an array. Arrays can be nested. The first arg is a string which is the tag name of the element to get rendered. An array can contain an object literal, this will represent the attributes of the element to get rendered. You can also add content, content should be of type string.
 
-    ["{{tag}}", { "class": "foo" }, "some {{value}}", ["br"]]
+## Examples
 
-This allows jup-arrays be data driven. No special keys or cryptic symbols like "cls" for class. Works great for SSJS and CSJS. JUP weighs in currently with most functionality done at about less than 100 lines of code, its really simple.
+    var html = JUP.html([
+      ["div",
+        ["span", { "class": "heading" }, "fooooooo"],
+        ["br"],
+        ["span", { "class": "heading" }, "fooooooo"],
+        ["br"],
+        ["span"]
+      ],
+      ["br"]
+    ]);
+    
+Using one of the data structures described is easy, pass it to the `html` method of JUP and it will render out the html.
+
+    var data1 = [
+      {
+        name: "hij1nx",
+        url: "github.com/hij1nx",
+        cities: [
+          "New York, NY",
+          "San Francisco, CA"
+        ]
+      },
+      {
+        name: "Marak Squires",
+        url: "github.com/marak",
+        cities: [
+          "Brooklyn, NY",
+          "New York, NY"
+        ]
+      }
+    ];
+
+    var html3 = JUP.html(data1,
+      ["div", { "{{name}}": "{{name}}" },
+        JUP.html(data1, ["span", "{{name}}", ["br"]])
+      ]
+    );
+
+JUP implements a mustache-like supplant feature. `{{tokens}}` get filled in each time you use a structure. This makes merging data into a structure is easy, just make it the first parameter of the html function. No special keys or cryptic symbols like "cls" for class. Here are some more examples.
 
     ["div"] // Renders: <div></div>
 
@@ -23,16 +59,3 @@ This allows jup-arrays be data driven. No special keys or cryptic symbols like "
     ["div", { "class": "{{someclass}}" }, ["div"], "content"] // Renders: <div class="foo"><div></div>content</div>
 
     ["{{namespace}}:{{tag}}", { "{{somekey}}": "foo" }, "content", ["div"]] // Renders: <ns:tag bar="foo">content<div></div></div>
-
-** Exiting the dark ages of strongly coupled templating. **
-
-Remember "Classic ASP" or "Java Beans"? they never really understood the concept of the DOM. They chose to ignore it and just stub in some placeholders like <%=myVariable%> for server generated content then just rewrite the file.
-
-These days, not much has changed, there are lots of templating engines. I think choosing a templating engine with JS these days is like choosing between a fast car and a fast car. IMHO, the most important thing to look at is the concept, not the performance. Sure you could go to JSPerf and test how many milliseconds of difference there is between their compile times. But with the advancements of JS implementations, compile time is becoming irrelevant. Also, if it takes too long to compile, there is probably too much templating happening and not enough semantic HTML, too much logic, maybe even some over-abstraction. We need to think less about ~milliseconds and more about the big picture.
-
-Enter the "Separation Of Concerns" principal. As soon as you take something thats non-standard like ${x} or <%=x%> and put it in the markup, you have mixed metaphors, you've muddied the water.
-
-It doesn't matter what rock-star developer created it or how optimized it is, if it's sprinkled into the markup, its going to become problematic. Try handing your new brand of markup back to the potentially confused designer and say, "re-hash this with your whiz-bang-brand-x-awesome-IDE and get it back to me by noon". Most likely your if-else logic and variables are hosed. The idea is that presentation and logic live separately and safely. 
-
-Enter Node.JS and server side JavaScript. One of my favorite projects to use with node has to be JSDOM. With a few simple lines of javascript and a single require, I can use jQuery to manipulate an HTML file on the server side before it gets served up! Since I can access #myDiv with out needing a ${placeholder} then I don't ever need to trash the markup.
-

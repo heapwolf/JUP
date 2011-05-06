@@ -1,106 +1,106 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
-	<head>
-		<title></title>
-		<style type="text/css" media="screen">
-			/* not at all important, just for testing */
-			html * { font-family: Arial; color: #666; }
-			h1 { color: #b55337; }
-			h3 { font-weight: bold; color: #000; }
-			hr { height: 14px; border: 1px #ddd solid; }
+  <head>
+    <title></title>
+    <style type="text/css" media="screen">
+      /* not at all important, just for testing */
+      html * { font-family: Arial; color: #666; }
+      h1 { color: #b55337; }
+      h3 { font-weight: bold; color: #000; }
+      hr { height: 14px; border: 1px #ddd solid; }
 
-			.heading { font-size: 18px; color: #b55337; font-weight: bold; }
-			.website { font-size: 18px; color: #666; }
-		</style>
-		
-		<script src="lib/jup.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" charset="utf-8">
+      .heading { font-size: 18px; color: #b55337; font-weight: bold; }
+      .website { font-size: 18px; color: #666; }
+    </style>
+    
+    <script src="lib/jup.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
 
-			var html1 = JUP.html([
-				["div",
-					["span", { "class": "heading" }, "fooooooo"],
-					["br"],
-					["span", { "class": "heading" }, "fooooooo"],
-					["br"],
-					["span"]
-				],
-				["br"]
-			]); // ~Firebug Profile: (0.181ms, 10 calls)
-			
-		
-			var html2 = JUP.html([
-				
-					["div", "a div"],
-					["div", "another div"],
-					["div", { "class": "normal" }, "div with attributes"],
-					["div", 
-						["div", "a nested div"]
-					],
-					["div", "some content ",
-						["a", { "href": "#" }, "with a link"]
-					],
-			
-					(function() {
-			
-						var tags = [];
-						for(var i=1; i < 11; i++) {
-							tags.push(["span", "test #" + i + " "]);
-						}
-						return tags;
-			
-					})(),
-			
-					["br", { "class": "tall" }]
-				]
-			);
+      var html1 = JUP.html([
+        ["div",
+          ["span", { "class": "heading" }, "fooooooo"],
+          ["br"],
+          ["span", { "class": "heading" }, "fooooooo"],
+          ["br"],
+          ["span"]
+        ],
+        ["br"]
+      ]); // ~Firebug Profile: (0.181ms, 10 calls)
+      
+    
+      var html2 = JUP.html([
+        
+          ["div", "a div"],
+          ["div", "another div"],
+          ["div", { "class": "normal" }, "div with attributes"],
+          ["div", 
+            ["div", "a nested div"]
+          ],
+          ["div", "some content ",
+            ["a", { "href": "#" }, "with a link"]
+          ],
+      
+          (function() {
+      
+            var tags = [];
+            for(var i=1; i < 11; i++) {
+              tags.push(["span", "test #" + i + " "]);
+            }
+            return tags;
+      
+          })(),
+      
+          ["br", { "class": "tall" }]
+        ]
+      );
 
-			// a simple data structure.
+      // a simple data structure.
 
-			var data1 = [
-				{
-					name: "Fern Micro",
-					url: "github.com/fernmicro",
-					cities: [
-						"New Orleans, LA",
-						"San Francisco, CA"
-					]
-				},
-				{
-					name: "Bucky Felini",
-					url: "github.com/bucky",
-					cities: [
-						"Philly, PA",
-						"NYC, NY"
-					]
-				}
-			];
+      var data1 = [
+        {
+          name: "Fern Micro",
+          url: "github.com/fernmicro",
+          cities: [
+            "New Orleans, LA",
+            "San Francisco, CA"
+          ]
+        },
+        {
+          name: "Bucky Felini",
+          url: "github.com/bucky",
+          cities: [
+            "Philly, PA",
+            "NYC, NY"
+          ]
+        }
+      ];
 
-			// repeating a structure inside a static structure.
-			
-			var html3 = JUP.html(data1,
-				["div", { "{{name}}": "{{name}}" },
-					JUP.html(data1, ["span", "{{name}}", ["br"]])
-				]
-			);
+      // repeating a structure inside a static structure.
+      
+      var html3 = JUP.html(data1,
+        ["div", { "{{name}}": "{{name}}" },
+          JUP.html(data1, ["span", "{{name}}", ["br"]])
+        ]
+      );
 
-			var jup1 = [
-				["div", { "class": "record" },
-					["span", { "class": "heading" }, JUP.data("name")],
-					["br"],
-					["span", { "class": "website" }, "http://{{url}}"],
-					["br"],
-					["span"]
-				],
-				["br"]
-			];
-		
-			// initiating data and structure together.
-			var html4 = JUP.html(data1, jup1);
-			
-			document.write(["", html1, html2, html3, html4].join("<hr/>"));
+      var jup1 = [
+        ["div", { "class": "record" },
+          ["span", { "class": "heading" }, JUP.data("name")],
+          ["br"],
+          ["span", { "class": "website" }, "http://{{url}}"],
+          ["br"],
+          ["span"]
+        ],
+        ["br"]
+      ];
+    
+      // initiating data and structure together.
+      var html4 = JUP.html(data1, jup1);
+      
+      document.write(["", html1, html2, html3, html4].join("<hr/>"));
 
-		</script>
-	</head>
-	<body>
-	</body>
+    </script>
+  </head>
+  <body>
+  </body>
 </html>
